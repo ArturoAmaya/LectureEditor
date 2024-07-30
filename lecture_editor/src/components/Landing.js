@@ -15,6 +15,15 @@ import CustomInput from "./CustomInput";
 import OutputDetails from "./OutputDetails";
 import ThemeDropdown from "./ThemeDropdown";
 import LanguagesDropdown from "./LanguagesDropdown";
+import AudioStream2 from './AudioStream2';
+
+const voiceId = '21m00Tcm4TlvDq8ikWAM';
+const text = 'Hello, this is a sample text to stream as speech.';
+const apiKey = 'd346e084dc9b17c44398a1667dd38be0';
+const voiceSettings = {
+  stability: 0,
+  similarity_boost: 0,
+};
 
 const javascriptDefault = `Name: Arturo Amaya
 Lecture Name: Lecture 10
@@ -29,7 +38,7 @@ Slides:
 let scenes = []
 const Landing = () => {
   const [sceneCount, setSceneCount] = useState(Array(1).fill(1))
-  const [code, setCode] = useState(javascriptDefault);
+  const [code, setCode] = useState(Array(1).fill(javascriptDefault));
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
@@ -54,6 +63,7 @@ const Landing = () => {
   const onChange = (action, data) => {
     switch (action) {
       case "code": {
+        console.log(code)
         setCode(data);
         break;
       }
@@ -218,7 +228,9 @@ const Landing = () => {
           }
           
         </div>
-
+        <div className="flex flex-col w-full h-full justify-start items-end">
+        <AudioStream2 voiceId={voiceId} text={code} apiKey={apiKey} voiceSettings={voiceSettings} />
+        </div>
       </div>
       <Footer />
     </>
