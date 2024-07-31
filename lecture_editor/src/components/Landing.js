@@ -48,6 +48,9 @@ const Landing = () => {
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
 
+  const rotateIMG = 90;
+
+  
   const onSelectChange = (sl) => {
     console.log("selected Option...", sl);
     setLanguage(sl);
@@ -153,6 +156,24 @@ const Landing = () => {
     }
   };
 
+  function handlenewEditor() {
+    const newCode = code.concat(javascriptDefault)
+    setCode(newCode)
+  }
+  function handleCodeChange(index, data) {
+    let newCode = code.map((v,i)=>{
+      if (i==index){
+        return data
+      } else {
+        return v
+      }
+    })
+    if (index >= newCode.length){
+      newCode.push(data)
+    }
+    setCode(newCode)
+  }
+
   function handleClick(){
     setSceneCount(s=>s.concat(0))
     console.log('aaa')
@@ -218,18 +239,37 @@ const Landing = () => {
         <div className="flex flex-col w-full h-full justify-start items-end">
           
           {
-            sceneCount.map((scene, index)=><CodeEditorWindow
-            key={index}
-            code={code}
-            onChange={onChange}
+            sceneCount.map((scene, index)=>
+            <div>
+              <CodeEditorWindow
+              key={index*2}
+            code={code[index]}
+            onChange={(action,data)=>{
+              switch (action) {
+                case "code": {
+                  console.log(index,code,data)
+                  handleCodeChange(index,data)
+                  //setCode(data);
+                  break;
+                }
+                default: {
+                  console.warn("case not handled!", action, data);
+                }
+              }
+            }
+            }
             language={language?.value}
             theme={theme.value}
-          />)
+              beforeMount={handlenewEditor}
+              />
+              <AudioStream2 voiceId={voiceId} text={code[index]} apiKey={apiKey} voiceSettings={voiceSettings} key={index*2+1}/>
+            </div>
+            )
           }
           
         </div>
         <div className="flex flex-col w-full h-full justify-start items-end">
-        <AudioStream2 voiceId={voiceId} text={code} apiKey={apiKey} voiceSettings={voiceSettings} />
+          <img src={require('../media/filmstrip.jpg')} alt="a filmstrip" style="transform:90;"></img>
         </div>
       </div>
       <Footer />
