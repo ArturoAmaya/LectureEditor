@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios"
+import {classnames} from "../utils/general";
 /*
 nterface VoiceSettings {
   stability: number;
@@ -52,8 +53,9 @@ const AudioStream2 = ({voiceId, text, apiKey, voiceSettings}) => {
 
     return (
         <div>
-            <button onClick={startStreaming} disabled={loading}>
-                Start Streaming
+            <button onClick={startStreaming} disabled={loading} className={classnames(
+                "mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0")}>
+                Test Voice
             </button>
             {error && <p>{error}</p>}
 
