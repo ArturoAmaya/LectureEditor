@@ -16,7 +16,11 @@ import OutputDetails from "./OutputDetails";
 import ThemeDropdown from "./ThemeDropdown";
 import LanguagesDropdown from "./LanguagesDropdown";
 import AudioStream2 from './AudioStream2';
+//import AudioVisualizer from './VoiceVisualizer';
 
+import download from 'downloadjs';
+
+const base_url = "/lecture-editor/lecture-editor/"
 const voiceId = '21m00Tcm4TlvDq8ikWAM';
 const text = 'Hello, this is a sample text to stream as speech.';
 const apiKey = 'd346e084dc9b17c44398a1667dd38be0';
@@ -50,7 +54,7 @@ const Landing = () => {
 
   const rotateIMG = 90;
 
-  
+
   const onSelectChange = (sl) => {
     console.log("selected Option...", sl);
     setLanguage(sl);
@@ -178,6 +182,43 @@ const Landing = () => {
     setSceneCount(s=>s.concat(0))
     console.log('aaa')
   }
+
+  const submitScript = async() => {
+    const scriptData = {
+      header: code[0],
+      scenes: code.slice(1)
+    }
+    const options = {
+      method: "POST",
+      url: base_url + "submit-script",
+      headers: {
+        "content-type": "application/json",
+        "Content-Type": "application/json",
+      },
+      data: scriptData,
+      responseType: 'blob'
+    }
+    axios
+    .request(options)
+    .then(function (response){
+      var url = window.URL.createObjectURL(response.data);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = "video.mp4";
+      document.body.appendChild(a); // append the element to the dom
+      a.click();
+      a.remove();
+      //console.log("res.data", response.data);
+      //console.log(URL.createObjectURL(response.data));  
+    })
+    //.then(function(blob){
+    //  download(blob, "AH.mp4")
+    //})
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+    
   function handleThemeChange(th) {
     const theme = th;
     console.log("theme...", theme);
@@ -234,6 +275,14 @@ const Landing = () => {
           >Add Scene
           </button>
         </div>
+        <div className="px-4 py-2">
+          <button
+            onClick={submitScript}
+            className={classnames(
+                "mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0")}
+          >Generate Video
+          </button>
+        </div>
       </div>
       <div className="flex flex-row space-x-4 items-start px-4 py-4">
         <div className="flex flex-col w-full h-full justify-start items-end">
@@ -242,7 +291,7 @@ const Landing = () => {
             sceneCount.map((scene, index)=>
             <div>
               <CodeEditorWindow
-              key={index*2}
+              key={index*3}
             code={code[index]}
             onChange={(action,data)=>{
               switch (action) {
@@ -262,14 +311,25 @@ const Landing = () => {
             theme={theme.value}
               beforeMount={handlenewEditor}
               />
-              <AudioStream2 voiceId={voiceId} text={code[index]} apiKey={apiKey} voiceSettings={voiceSettings} key={index*2+1}/>
+              <AudioStream2 voiceId={voiceId} text={code[index]} apiKey={apiKey} voiceSettings={voiceSettings} key={index*3+1}/>
+              <button key={index*3+2}
+            onClick={console.log("wowza")}
+            className={classnames(
+                "mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0")}
+          >Preview Scene
+          </button>
+          <div></div>
             </div>
             )
+          }
+
+          {
+
           }
           
         </div>
         <div className="flex flex-col w-full h-full justify-start items-end">
-          <img src={require('../media/filmstrip.jpg')} alt="a filmstrip" style="transform:90;"></img>
+          <img src={require('../media/filmstrip.jpg')} alt="a filmstrip" class="filmstrip"></img>
         </div>
       </div>
       <Footer />
