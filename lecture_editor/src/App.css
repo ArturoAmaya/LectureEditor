@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.filmstrip {
+  transform: translateX(10px) translateY(250px) rotate(90deg);
+}
+
+button {
+  display: inline;
+}
