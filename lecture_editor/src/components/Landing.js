@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CodeEditorWindow from "./CodeEditorWindow";
 import axios from "axios";
 import { classnames } from "../utils/general";
@@ -41,8 +41,25 @@ Slides:
     https://drive.google.com/file/d/1bfjcDB0c2p_Hp5lB-XpqL8W6LcM5M6xy/view?usp=share_link`;
 let scenes = []
 const Landing = () => {
-  const [sceneCount, setSceneCount] = useState(Array(1).fill(1))
-  const [code, setCode] = useState(Array(1).fill(javascriptDefault));
+  // This state restoring was done with https://dev.to/jorensm/how-to-keep-state-between-page-refreshes-in-react-3801
+  const _initial_code = useMemo(() => {
+    const local_storage_val = localStorage.getItem('state:'+'code');
+    if (local_storage_val) {
+      return JSON.parse(local_storage_val);
+    }
+    return Array(1).fill(javascriptDefault);
+  }, []);
+
+  const _intial_scene_count = useMemo(() => {
+    const local_storage_val = localStorage.getItem('state:'+'scene_count');
+    if (local_storage_val) {
+      return JSON.parse(local_storage_val);
+    } 
+    return Array(1).fill(1)
+  })
+
+  const [sceneCount, setSceneCount] = useState(_intial_scene_count)
+  const [code, setCode] = useState(_initial_code);//Array(1).fill(javascriptDefault));
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
@@ -54,6 +71,17 @@ const Landing = () => {
 
   const rotateIMG = 90;
 
+
+
+  useEffect(() => {
+    const state_str = JSON.stringify(code);
+    localStorage.setItem('state:' + 'code', state_str)
+  }, [code])
+
+  useEffect(() => {
+    const state_str = JSON.stringify(sceneCount);
+    localStorage.setItem('state:'+'scene_count', state_str)
+  }, [sceneCount])
 
   const onSelectChange = (sl) => {
     console.log("selected Option...", sl);
@@ -67,6 +95,7 @@ const Landing = () => {
       handleCompile();
     }
   }, [ctrlPress, enterPress]);
+
   const onChange = (action, data) => {
     switch (action) {
       case "code": {
@@ -79,6 +108,8 @@ const Landing = () => {
       }
     }
   };
+
+
   const handleCompile = () => {
     setProcessing(true);
     const formData = {
