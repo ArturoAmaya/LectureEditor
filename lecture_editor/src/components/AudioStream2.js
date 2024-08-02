@@ -52,7 +52,7 @@ const AudioStream2 = ({voiceId, text, apiKey, voiceSettings}) => {
     }
 
     return (
-        <div>
+        <div style={{display: 'inline'}} className="mr-3">
             <button onClick={startStreaming} disabled={loading} className={classnames(
                 "mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0")}>
                 Test Voice
