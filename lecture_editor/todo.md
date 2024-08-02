@@ -1,0 +1,7 @@
+- [ ] Make code editor windows resizable
+- [ ] Separate editor windows for header content and body content
+- [ ] Film strip
+- [ ] Video preview
+- [ ] Static image previews
+- [ ] Put things in properly compartmentalized components rather than just in Landing.js
+- [ ] Preview panel
