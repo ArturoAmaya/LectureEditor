@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import axios from "axios"
 import {classnames} from "../utils/general";
 
-const PDFUpload = () => {
+const PDFUpload = (sessionId) => {
     const [file, setFile] = useState();
 
     function handleChange(event){
@@ -21,6 +21,7 @@ const PDFUpload = () => {
             headers: {
                 'Accept': 'application/json, application/pdf',
                 'content-type': 'multipart/form-data',
+                Cookie: `sessionId=${sessionId}`
             },
             data: {
                 "file": file,
