@@ -17,6 +17,8 @@ const AudioStream2 = ({voiceId, text, apiKey, voiceSettings}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+    let safe_text = '';
+
     const startStreaming = async () => {
         setLoading(true);
         setError("");
@@ -26,8 +28,10 @@ const AudioStream2 = ({voiceId, text, apiKey, voiceSettings}) => {
             'Content-Type':'application/json',
             'xi-api-key': apiKey,
         }
+
+        safe_text = text.slice(0).replaceAll(/{.*}/g, '').replaceAll(/\[.*\]/g,'').replaceAll(/\(.*\)/g, '');
         const requestBody = {
-            text,
+            text: safe_text,
             voice_settings: voiceSettings,
           };
         try{
