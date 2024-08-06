@@ -19,13 +19,14 @@ import AudioStream2 from './AudioStream2';
 //import AudioVisualizer from './VoiceVisualizer';
 
 import download from 'downloadjs';
+import PDFUpload from "./PDFUpload";
 
 const base_url = "/lecture-editor/lecture-editor/"
 const voiceId = '21m00Tcm4TlvDq8ikWAM';
 const text = 'Hello, this is a sample text to stream as speech.';
-const apiKey = 'd346e084dc9b17c44398a1667dd38be0';
+const apiKey = 'sk_2e13e411b9625de3e3cbb0ee65edfbf40d7c8d822012a971';//'d346e084dc9b17c44398a1667dd38be0';
 const voiceSettings = {
-  stability: 0,
+  stability: 0.5,
   similarity_boost: 0,
 };
 
@@ -35,10 +36,12 @@ HeyGen API key: YTZhODM0NjM2ZGQwNGI4NmExMzg5ZTQwMGFmMjM3ZTAtMTcxNzc5MjAzNA==
 Default Composition: [type:pip]
 Default Transition: {type: fade, duration: 1.0}
 Default Avatar: (id:Luke_public_3_20240306, voice_id:5dddee02307b4f49a17c123c120a60ca, position:0.75;0.75, scale:0.5, style:closeUp, cbc:#453423, bc:#FFEE22)
+PDF Name: Lecture 4.pdf
 Slides:
     https://drive.google.com/file/d/1lQGVcqZHoQIg2wvSLqeeK_TSbN_2X3Zr/view?usp=share_link
     https://drive.google.com/file/d/1UCtCDOd6QsKpweLOT4vQu8Qlk4QW5uYm/view?usp=share_link   
-    https://drive.google.com/file/d/1bfjcDB0c2p_Hp5lB-XpqL8W6LcM5M6xy/view?usp=share_link`;
+    https://drive.google.com/file/d/1bfjcDB0c2p_Hp5lB-XpqL8W6LcM5M6xy/view?usp=share_link
+--`;
 let scenes = []
 const Landing = () => {
   // This state restoring was done with https://dev.to/jorensm/how-to-keep-state-between-page-refreshes-in-react-3801
@@ -69,6 +72,8 @@ const Landing = () => {
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
 
+  const [sessionId, setSessionID] = useState(window.crypto.getRandomValues(new Uint32Array(1)))
+  console.log("sessionID", sessionId)
   const rotateIMG = 90;
 
 
@@ -239,6 +244,8 @@ const Landing = () => {
       document.body.appendChild(a); // append the element to the dom
       a.click();
       a.remove();
+
+      window.location.replace(url);
       //console.log("res.data", response.data);
       //console.log(URL.createObjectURL(response.data));  
     })
@@ -297,6 +304,9 @@ const Landing = () => {
       <div className="flex flex-row">
         <div className="px-4 py-2">
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme}/>
+        </div>
+        <div className="px-4 py-2">
+          <PDFUpload></PDFUpload>
         </div>
         <div className="px-4 py-2">
           <button
