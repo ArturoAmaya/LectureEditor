@@ -61,6 +61,13 @@ const Landing = () => {
     return Array(1).fill(1)
   })
 
+  const _initial_sessionId = useMemo(()=>{
+    const local_storage_val = localStorage.getItem('state:'+'sessionId');
+    if(local_storage_val){
+      return JSON.parse(local_storage_val);
+    }
+    return window.crypto.getRandomValues(new Uint32Array(1))[0]
+  })
   const [sceneCount, setSceneCount] = useState(_intial_scene_count)
   const [code, setCode] = useState(_initial_code);//Array(1).fill(javascriptDefault));
   const [customInput, setCustomInput] = useState("");
@@ -72,7 +79,7 @@ const Landing = () => {
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
 
-  const [sessionId, setSessionID] = useState(window.crypto.getRandomValues(new Uint32Array(1)))
+  const [sessionId, setSessionID] = useState(_initial_sessionId)
   console.log("sessionID", sessionId)
   const rotateIMG = 90;
 
@@ -81,12 +88,17 @@ const Landing = () => {
   useEffect(() => {
     const state_str = JSON.stringify(code);
     localStorage.setItem('state:' + 'code', state_str)
-  }, [code])
+  }, [code]);
 
   useEffect(() => {
     const state_str = JSON.stringify(sceneCount);
     localStorage.setItem('state:'+'scene_count', state_str)
-  }, [sceneCount])
+  }, [sceneCount]);
+
+  useEffect(()=>{
+    const state_str = JSON.stringify(sessionId);
+    localStorage.setItem('state:'+'sessionId', state_str)
+  })
 
   const onSelectChange = (sl) => {
     console.log("selected Option...", sl);
@@ -230,6 +242,7 @@ const Landing = () => {
       headers: {
         "content-type": "application/json",
         "Content-Type": "application/json",
+        Cookie: `sessionId=${sessionId}`
       },
       data: scriptData,
       responseType: 'blob'
@@ -306,7 +319,7 @@ const Landing = () => {
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme}/>
         </div>
         <div className="px-4 py-2">
-          <PDFUpload></PDFUpload>
+          <PDFUpload sessionId={sessionId}></PDFUpload>
         </div>
         <div className="px-4 py-2">
           <button
