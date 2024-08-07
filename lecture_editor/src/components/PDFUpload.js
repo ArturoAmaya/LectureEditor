@@ -21,11 +21,10 @@ const PDFUpload = (sessionId) => {
             headers: {
                 'Accept': 'application/json, application/pdf',
                 'content-type': 'multipart/form-data',
-                Cookie: `sessionId=${sessionId}`
             },
             data: {
                 "file": file,
-                query: ""
+                query: "" // seemingly necessary stuff to make it work
             },
         };
         console.log(formdata.get('file'))
