@@ -64,9 +64,11 @@ const Landing = () => {
   const _initial_sessionId = useMemo(()=>{
     const local_storage_val = localStorage.getItem('state:'+'sessionId');
     if(local_storage_val){
+      document.cookie = `sessionId=${JSON.parse(local_storage_val)}` // missing expiry date n such
       return JSON.parse(local_storage_val);
-    }
-    return window.crypto.getRandomValues(new Uint32Array(1))[0]
+    } 
+    document.cookie = `sessionId=${window.crypto.getRandomValues(new Uint32Array(1))[0]}`
+    return document.cookie.split('=')[1]
   })
   const [sceneCount, setSceneCount] = useState(_intial_scene_count)
   const [code, setCode] = useState(_initial_code);//Array(1).fill(javascriptDefault));
@@ -97,6 +99,7 @@ const Landing = () => {
 
   useEffect(()=>{
     const state_str = JSON.stringify(sessionId);
+
     localStorage.setItem('state:'+'sessionId', state_str)
   })
 
@@ -242,7 +245,6 @@ const Landing = () => {
       headers: {
         "content-type": "application/json",
         "Content-Type": "application/json",
-        Cookie: `sessionId=${sessionId}`
       },
       data: scriptData,
       responseType: 'blob'
