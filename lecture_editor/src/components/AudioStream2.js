@@ -13,7 +13,7 @@ interface AudioStreamProps {
   apiKey: string;
   voiceSettings: VoiceSettings;
 }*/
-const AudioStream2 = ({voiceId, text, apiKey, voiceSettings}) => {
+const AudioStream2 = ({voiceId, text, apiKey, voiceSettings, count}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -40,12 +40,32 @@ const AudioStream2 = ({voiceId, text, apiKey, voiceSettings}) => {
                 responseType: 'blob',
             });
             console.log(response)
+            let true_count = count - 1
             if (response.status === 200){
                 console.log('sucka')
                 const audio = new Audio(URL.createObjectURL(response.data));
                 console.log(audio)
                 audio.play();
                 console.log('huh')
+                const url = '/lecture-editor/lecture-editor/audio_upload'
+                const config_audio = {
+                    method: "POST",
+                    url: url,
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    },
+                    data: {
+                        "audio": response.data,
+                    },
+                    params: { // apparently params is the way to put query params in there not query or in body
+                        'audio_index': true_count
+                    },
+                };
+                axios.request(config_audio)
+                .then((response)=>{console.log(response.data)})
+                .catch((error)=>{
+                    console.log(error);
+                })
             }
         } catch (error) {
             console.log("error")
