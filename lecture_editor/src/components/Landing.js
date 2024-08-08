@@ -24,7 +24,7 @@ import PDFUpload from "./PDFUpload";
 const base_url = "/lecture-editor/lecture-editor/"
 const voiceId = '21m00Tcm4TlvDq8ikWAM';
 const text = 'Hello, this is a sample text to stream as speech.';
-const apiKey = 'sk_2e13e411b9625de3e3cbb0ee65edfbf40d7c8d822012a971';//'d346e084dc9b17c44398a1667dd38be0';
+const apiKey = 'sk_b4cb642987a78339396af5fd20c862b9fd97dc7da059c5f5';//'sk_2e13e411b9625de3e3cbb0ee65edfbf40d7c8d822012a971';//'d346e084dc9b17c44398a1667dd38be0';
 const voiceSettings = {
   stability: 0.5,
   similarity_boost: 0,
@@ -237,7 +237,8 @@ const Landing = () => {
   const submitScript = async() => {
     const scriptData = {
       header: code[0],
-      scenes: code.slice(1)
+      scenes: code.slice(1),
+      audio: true
     }
     const options = {
       method: "POST",
@@ -367,7 +368,7 @@ const Landing = () => {
             theme={theme.value}
               beforeMount={handlenewEditor}
               />
-              <AudioStream2 voiceId={voiceId} text={code[index]} apiKey={apiKey} voiceSettings={voiceSettings} key={index*3+1}/>
+              <AudioStream2 voiceId={voiceId} text={code[index]} apiKey={apiKey} voiceSettings={voiceSettings} key={index*3+1} count={index}/>
               <button key={index*3+2}
             onClick={console.log("wowza")}
             className={classnames(
